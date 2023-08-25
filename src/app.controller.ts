@@ -6,6 +6,7 @@ import {
   HttpException,
   HttpStatus,
   Post,
+  Query,
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import { LoginDTO } from './dtos/login.dto';
@@ -34,5 +35,14 @@ export class AppController {
       console.log(error);
       throw new HttpException(error.message, HttpStatus.UNAUTHORIZED);
     }
+  }
+
+  @Get('tweets')
+  getTweets(@Query('page') page: number = undefined) {
+    if (page && (isNaN(page) || page <= 0)) {
+      throw new HttpException('Informe uma página válida!', HttpStatus.BAD_REQUEST);
+    }
+
+    return this.appService.getTweets(page);
   }
 }

@@ -7,6 +7,7 @@ import { TweetDTO } from './dtos/tweet.dto';
 export class AppService {
   private users: User[];
   private tweets: Tweet[];
+  private LIMIT = 15;
 
   constructor(){
     this.users = [];
@@ -30,7 +31,37 @@ export class AppService {
     return this.tweets.push(new Tweet(user, tweet));
   }
 
-  getUserByUsername(username: string) {
+  private getUserByUsername(username: string) {
     return this.users.find((user) => user.username === username);
   }
+
+  getTweets(page?: number) {
+    let tweets: Tweet[] = [];
+
+    if (page) {
+      const { from, to } = this.calculatePageRange(page);
+      tweets = this.tweets.slice(from, to).reverse();
+    } else tweets = this.tweets.slice(-this.LIMIT).reverse();
+
+    return this.formatTweets(tweets);
+  }
+
+  private formatTweets(tweets: Tweet[]) {
+    return tweets.map((value) => {
+      const { username, avatar } = value.user;
+      return {
+        username,
+        avatar,
+        tweet: value.tweet,
+      };
+    });
+  }
+
+  private calculatePageRange(page: number): { from: number; to: number } {
+    return {
+      from: (page - 1) * this.LIMIT,
+      to: page * this.LIMIT,
+    };
+  }
+  
 }
