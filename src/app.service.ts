@@ -46,6 +46,11 @@ export class AppService {
     return this.formatTweets(tweets);
   }
 
+  getTweetsByUser(username: string) {
+    const userTweets = this.tweets.filter(tweet => tweet.user.username === username);
+    return this.formatTweets(userTweets).reverse();
+  }
+
   private formatTweets(tweets: Tweet[]) {
     return tweets.map((value) => {
       const { username, avatar } = value.user;
