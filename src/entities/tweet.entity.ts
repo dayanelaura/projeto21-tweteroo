@@ -1,4 +1,4 @@
-import { User } from '../../users/entities/user.entity';
+import { User } from './user.entity';
 
 export class Tweet {
   private _user: User;
